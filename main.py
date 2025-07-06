@@ -5,7 +5,9 @@ from utilities import make_driver
 from pop_up import close_pop_up
 from query_search import search_query
 from crawler import crawl
+from save_data import save_data
 
+import re
 def main():
     query = "earbuds"
     driver = make_driver()
@@ -15,12 +17,18 @@ def main():
 # --------------------------------------- main loop-------------------------------- #
     try:
         driver.get("https://aliexpress.com")
+        
+
         close_pop_up(wait)
-        if not (search_query(query, wait, driver)):
+        isSearched = search_query(query, wait, driver)
+        
+        if not(isSearched):
             return
-        crawl(driver, wait, action)
+        records = crawl(driver, wait, action)
+        save_data(records)
     except Exception as e:
         print("Timeout while surfing... " ,e)   
+
     driver.quit()
 
 
